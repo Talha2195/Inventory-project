@@ -9,7 +9,7 @@ async function inventoryItemsGet(req, res) {
         const listOfItems = await db.getAllItems(); 
         res.render("items", { items: listOfItems });  
     } catch (error) {
-        console.error('Error fetching items:', error);
+        console.error('Error fetching items:', error); 
         res.status(500).send("Error fetching items from the database");
     }
 }
