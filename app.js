@@ -1,13 +1,14 @@
-require('dotenv').config(); 
-console.log('DATABASE_URL:', process.env.DATABASE_URL);
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const inventoryRouter = require('./routes/inventoryRoutes');
+const { initializeDatabase } = require('./db/setUp');  
 
-const express = require("express")
-const app = express()
-const inventoryRouter = require("./routes/inventoryRoutes")
+initializeDatabase();
 
-app.set("view engine", "ejs")
-app.use(express.urlencoded({ extended: true }))
-app.use("/", inventoryRouter)
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true }));
+app.use('/', inventoryRouter);
 
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`))
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
