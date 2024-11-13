@@ -3,13 +3,11 @@ require('dotenv').config();
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false,
-    },
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
 async function getAllItems() {
-    const { rows } = await pool.query('SELECT * FROM inventory');
+    const { rows } = await pool.query('SELECT * FROM games');
     return rows;
 }
 
