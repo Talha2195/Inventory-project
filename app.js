@@ -2,9 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const inventoryRouter = require('./routes/inventoryRoutes');
-const { initializeDatabase } = require('./db/setUp');  
+const { seedDatabase } = require('./db/populateDb');  
 
-initializeDatabase();
+seedDatabase();
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
