@@ -66,12 +66,16 @@ async function seedDatabase() {
         ('Monster Hunter', 'A game where you hunt monsters.', 10),
         ('Balataro', 'An adventure game in an open world.', 20),
         ('Outer Wilds', 'A space exploration game.', 50),
-        ('Assassin\'s Creed', 'A game about historical assassins.', 75)
+        ('Assassin''s Creed', 'A game about historical assassins.', 75)
       ON CONFLICT (name) DO NOTHING
       RETURNING id, name;
     `;
-    const gamesResult = await client.query(insertGamesQuery);
-    console.log("Games data inserted:", gamesResult.rows);
+    try {
+      const gamesResult = await client.query(insertGamesQuery);
+      console.log("Games data inserted:", gamesResult.rows); 
+    } catch (err) {
+      console.error("Error inserting games:", err.stack);
+    }
 
     const insertGenresQuery = `
       INSERT INTO genres (name, description)
@@ -84,44 +88,42 @@ async function seedDatabase() {
       ON CONFLICT (name) DO NOTHING
       RETURNING id, name;
     `;
-    const genresResult = await client.query(insertGenresQuery);
-    console.log("Genres data inserted:", genresResult.rows);
-
-    const insertDevelopersQuery = `
-      INSERT INTO developers (name, description)
-      VALUES
-        ('Naughty Dog', 'A developer known for action-adventure games like Uncharted and Last of Us.'),
-        ('Bethesda', 'Famous for creating open-world RPGs like Skyrim and Fallout.'),
-        ('Ubisoft', 'Known for the Assassin\'s Creed series and other open-world games.'),
-        ('CD Projekt Red', 'Developer of The Witcher series and Cyberpunk 2077.'),
-        ('Rockstar Games', 'Famous for the Grand Theft Auto and Red Dead Redemption series.')
-      ON CONFLICT (name) DO NOTHING
-      RETURNING id, name;
-    `;
-    const developersResult = await client.query(insertDevelopersQuery);
-    console.log("Developers data inserted:", developersResult.rows);
+    try {
+      const genresResult = await client.query(insertGenresQuery);
+      console.log("Genres data inserted:", genresResult.rows); 
+    } catch (err) {
+      console.error("Error inserting genres:", err.stack);
+    }
 
     const insertGameGenreQuery = `
       INSERT INTO game_genre (game_id, genre_id)
       VALUES
         ((SELECT id FROM games WHERE name = 'Minecraft'), (SELECT id FROM genres WHERE name = 'Adventure')),
         ((SELECT id FROM games WHERE name = 'Monster Hunter'), (SELECT id FROM genres WHERE name = 'Action')),
-        ((SELECT id FROM games WHERE name = 'Assassin\'s Creed'), (SELECT id FROM genres WHERE name = 'Action')),
+        ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM genres WHERE name = 'Action')), 
         ((SELECT id FROM games WHERE name = 'Outer Wilds'), (SELECT id FROM genres WHERE name = 'Adventure')),
-        ((SELECT id FROM games WHERE name = 'Assassin\'s Creed'), (SELECT id FROM genres WHERE name = 'RPG'))
+        ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM genres WHERE name = 'RPG'))
     `;
-    await client.query(insertGameGenreQuery);
-    console.log("Games associated with genres");
+    try {
+      const gameGenreResult = await client.query(insertGameGenreQuery);
+      console.log("Game-Genre data inserted:", gameGenreResult.rows); 
+    } catch (err) {
+      console.error("Error inserting game-genre:", err.stack);
+    }
 
     const insertGameDeveloperQuery = `
       INSERT INTO game_developer (game_id, developer_id)
       VALUES
         ((SELECT id FROM games WHERE name = 'Minecraft'), (SELECT id FROM developers WHERE name = 'Naughty Dog')),
         ((SELECT id FROM games WHERE name = 'Monster Hunter'), (SELECT id FROM developers WHERE name = 'Bethesda')),
-        ((SELECT id FROM games WHERE name = 'Assassin\'s Creed'), (SELECT id FROM developers WHERE name = 'Ubisoft'))
+        ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM developers WHERE name = 'Ubisoft'))
     `;
-    await client.query(insertGameDeveloperQuery);
-    console.log("Games associated with developers");
+    try {
+      const gameDeveloperResult = await client.query(insertGameDeveloperQuery);
+      console.log("Game-Developer data inserted:", gameDeveloperResult.rows);
+    } catch (err) {
+      console.error("Error inserting game-developer:", err.stack);
+    }
 
   } catch (err) {
     console.error("Error during database seeding:", err.stack);
@@ -131,4 +133,6 @@ async function seedDatabase() {
   }
 }
 
-module.exports = { seedDatabase };
+module.exports = {
+  seedDatabase
+};
