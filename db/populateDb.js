@@ -64,7 +64,7 @@ async function seedDatabase() {
       VALUES
         ('Naughty Dog', 'A developer known for action-adventure games like Uncharted and Last of Us.'),
         ('Bethesda', 'Famous for creating open-world RPGs like Skyrim and Fallout.'),
-        ('Ubisoft', 'Known for the Assassin\'s Creed series and other open-world games.'),
+        ('Ubisoft', 'Known for the Assassins Creed series and other open-world games.'),
         ('CD Projekt Red', 'Developer of The Witcher series and Cyberpunk 2077.'),
         ('Rockstar Games', 'Famous for the Grand Theft Auto and Red Dead Redemption series.')
       ON CONFLICT (name) DO NOTHING
@@ -80,7 +80,7 @@ async function seedDatabase() {
         ('Monster Hunter', 'A game where you hunt monsters.', 10),
         ('Balataro', 'An adventure game in an open world.', 20),
         ('Outer Wilds', 'A space exploration game.', 50),
-        ('Assassin''s Creed', 'A game about historical assassins.', 75)
+        ('Assassins Creed', 'A game about historical assassins.', 75)
       ON CONFLICT (name) DO NOTHING
       RETURNING id, name;
     `;
@@ -106,9 +106,9 @@ async function seedDatabase() {
       VALUES
         ((SELECT id FROM games WHERE name = 'Minecraft'), (SELECT id FROM genres WHERE name = 'Adventure')),
         ((SELECT id FROM games WHERE name = 'Monster Hunter'), (SELECT id FROM genres WHERE name = 'Action')),
-        ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM genres WHERE name = 'Action')), 
+        ((SELECT id FROM games WHERE name = 'Assassins Creed'), (SELECT id FROM genres WHERE name = 'Action')), 
         ((SELECT id FROM games WHERE name = 'Outer Wilds'), (SELECT id FROM genres WHERE name = 'Adventure')),
-        ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM genres WHERE name = 'RPG'))
+        ((SELECT id FROM games WHERE name = 'Assassins Creed'), (SELECT id FROM genres WHERE name = 'RPG'))
     `;
     const gameGenreResult = await client.query(insertGameGenreQuery);
     console.log("Game-Genre data inserted:", gameGenreResult.rows);
@@ -118,7 +118,7 @@ async function seedDatabase() {
       VALUES
         ((SELECT id FROM games WHERE name = 'Minecraft'), (SELECT id FROM developers WHERE name = 'Naughty Dog')),
         ((SELECT id FROM games WHERE name = 'Monster Hunter'), (SELECT id FROM developers WHERE name = 'Bethesda')),
-        ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM developers WHERE name = 'Ubisoft'))
+        ((SELECT id FROM games WHERE name = 'Assassins Creed'), (SELECT id FROM developers WHERE name = 'Ubisoft'))
     `;
     const gameDeveloperResult = await client.query(insertGameDeveloperQuery);
     console.log("Game-Developer data inserted:", gameDeveloperResult.rows);
