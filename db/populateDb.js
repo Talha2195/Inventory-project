@@ -102,14 +102,16 @@ async function seedDatabase() {
     console.log("Genres data inserted:", genresResult.rows);
 
     const insertGameGenreQuery = `
-      INSERT INTO game_genre (game_id, genre_id)
-      VALUES
-        ((SELECT id FROM games WHERE name = 'Minecraft'), (SELECT id FROM genres WHERE name = 'Adventure')),
-        ((SELECT id FROM games WHERE name = 'Monster Hunter'), (SELECT id FROM genres WHERE name = 'Action')),
-        ((SELECT id FROM games WHERE name = 'Assassins Creed'), (SELECT id FROM genres WHERE name = 'Action')), 
-        ((SELECT id FROM games WHERE name = 'Outer Wilds'), (SELECT id FROM genres WHERE name = 'Adventure')),
-        ((SELECT id FROM games WHERE name = 'Assassins Creed'), (SELECT id FROM genres WHERE name = 'RPG'))
-    `;
+    INSERT INTO game_genre (game_id, genre_id)
+    VALUES
+      ((SELECT id FROM games WHERE name = 'Minecraft'), (SELECT id FROM genres WHERE name = 'Adventure')),
+      ((SELECT id FROM games WHERE name = 'Monster Hunter'), (SELECT id FROM genres WHERE name = 'Action')),
+      ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM genres WHERE name = 'Action')), 
+      ((SELECT id FROM games WHERE name = 'Outer Wilds'), (SELECT id FROM genres WHERE name = 'Adventure')),
+      ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM genres WHERE name = 'RPG'))
+    ON CONFLICT (game_id, genre_id) DO NOTHING
+  `;
+  
     const gameGenreResult = await client.query(insertGameGenreQuery);
     console.log("Game-Genre data inserted:", gameGenreResult.rows);
 
