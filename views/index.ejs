@@ -4,10 +4,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Games Library</title>
+    <link rel="stylesheet" href="css/style.css"> 
 </head>
 <body>
-    <a>Welcome to the index!</a>
-    <a href="/items"><button>Get all items!</button></a>
+    <header>
+        Games Library
+    </header>
+
+    <div class="main-container">
+        <h2>Manage Your Games</h2>
+        <form action="/search" method="GET">
+            <div class="search-container">
+                <input class="search-bar" type="text" placeholder="Search games...">
+            </div>
+        </form>
+
+        <div class="button-container">
+            <button>Add Product</button>
+            <button>Filter</button>
+        </div>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Developer</th>
+                <th>Genre</th>
+            </tr>
+            <% items.forEach(item => { %>
+                <tr>
+                    <td><%= item.name %></td>
+                    <td><%= item.description %></td>
+                    <td><%= item.developer_name || 'N/A' %></td>
+                    <td><%= item.genre_name || 'N/A' %></td>
+                </tr>
+            <% }) %>
+        </table>
+    </div>
 </body>
 </html>
+
+
