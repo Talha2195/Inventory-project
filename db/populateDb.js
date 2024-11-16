@@ -13,24 +13,7 @@ async function seedDatabase() {
     await client.connect();
     console.log("Successfully connected to the database!");
 
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS games (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL UNIQUE,
-        description TEXT,
-        quantity INT DEFAULT 0
-      );
-    `);
-    console.log("Games table created (if not already exists)");
-
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS genres (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL UNIQUE,
-        description TEXT
-      );
-    `);
-    console.log("Genres table created (if not already exists)");
+    await client.query('DROP TABLE IF EXISTS games, developers, genres CASCADE;');
 
     await client.query(`
       CREATE TABLE IF NOT EXISTS developers (
@@ -42,88 +25,74 @@ async function seedDatabase() {
     console.log("Developers table created (if not already exists)");
 
     await client.query(`
-      CREATE TABLE IF NOT EXISTS game_genre (
-        game_id INT REFERENCES games(id) ON DELETE CASCADE,
-        genre_id INT REFERENCES genres(id) ON DELETE CASCADE,
-        PRIMARY KEY (game_id, genre_id)
+      CREATE TABLE IF NOT EXISTS genres (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL UNIQUE,
+        description TEXT
       );
     `);
-    console.log("Game-Genre join table created (if not already exists)");
+    console.log("Genres table created (if not already exists)");
 
     await client.query(`
-      CREATE TABLE IF NOT EXISTS game_developer (
-        game_id INT REFERENCES games(id) ON DELETE CASCADE,
-        developer_id INT REFERENCES developers(id) ON DELETE CASCADE,
-        PRIMARY KEY (game_id, developer_id)
+      CREATE TABLE IF NOT EXISTS games (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL UNIQUE,
+        description TEXT,
+        quantity INT DEFAULT 0,
+        developer_id INT REFERENCES developers(id) ON DELETE SET NULL,
+        genre_id INT REFERENCES genres(id) ON DELETE SET NULL
       );
     `);
-    console.log("Game-Developer join table created (if not already exists)");
+    console.log("Games table created (with genre_id)");
 
     const insertDevelopersQuery = `
       INSERT INTO developers (name, description)
       VALUES
-        ('Naughty Dog', 'A developer known for action-adventure games like Uncharted and Last of Us.'),
-        ('Bethesda', 'Famous for creating open-world RPGs like Skyrim and Fallout.'),
-        ('Ubisoft', 'Known for the Assassins Creed series and other open-world games.'),
-        ('CD Projekt Red', 'Developer of The Witcher series and Cyberpunk 2077.'),
-        ('Rockstar Games', 'Famous for the Grand Theft Auto and Red Dead Redemption series.')
-      ON CONFLICT (name) DO NOTHING
-      RETURNING id, name;
+        ('Bungie', 'A developer known for Destiny and Halo.'),
+        ('Nintendo', 'A developer famous for Mario, Zelda, and other franchises.'),
+        ('CD Projekt Red', 'Known for The Witcher series and Cyberpunk 2077.'),
+        ('Valve', 'Creator of Half-Life and Portal.'),
+        ('Rockstar Games', 'Developer behind the Grand Theft Auto and Red Dead Redemption series.'),
+        ('Bethesda', 'Famous for Skyrim and Fallout.'),
+        ('Ubisoft', 'Known for Assassins Creed and Far Cry.'),
+        ('Electronic Arts', 'A major publisher of sports and action games.');
     `;
-    const developersResult = await client.query(insertDevelopersQuery);
-    console.log("Developers inserted:", developersResult.rows);
-
-    const insertGamesQuery = `
-      INSERT INTO games (name, description, quantity)
-      VALUES
-        ('Minecraft', 'A sandbox game about building and exploring.', 4),
-        ('Monster Hunter', 'A game where you hunt monsters.', 10),
-        ('Balataro', 'An adventure game in an open world.', 20),
-        ('Outer Wilds', 'A space exploration game.', 50),
-        ('Assassins Creed', 'A game about historical assassins.', 75)
-      ON CONFLICT (name) DO NOTHING
-      RETURNING id, name;
-    `;
-    const gamesResult = await client.query(insertGamesQuery);
-    console.log("Games data inserted:", gamesResult.rows);
+    await client.query(insertDevelopersQuery);
+    console.log("Developers inserted.");
 
     const insertGenresQuery = `
       INSERT INTO genres (name, description)
       VALUES
         ('Action', 'Fast-paced games focused on action sequences.'),
-        ('Adventure', 'Games that focus on exploration and puzzle solving.'),
+        ('Adventure', 'Games that focus on exploration and puzzle-solving.'),
         ('RPG', 'Role-playing games with immersive storytelling.'),
-        ('Strategy', 'Games that emphasize strategic thinking and planning.'),
-        ('Shooter', 'Games focused on combat involving firearms.')
-      ON CONFLICT (name) DO NOTHING
-      RETURNING id, name;
+        ('Strategy', 'Games that require strategic thinking and planning.'),
+        ('Shooter', 'Games focused on combat with firearms.');
     `;
-    const genresResult = await client.query(insertGenresQuery);
-    console.log("Genres data inserted:", genresResult.rows);
+    await client.query(insertGenresQuery);
+    console.log("Genres inserted.");
 
-    const insertGameGenreQuery = `
-    INSERT INTO game_genre (game_id, genre_id)
-    VALUES
-      ((SELECT id FROM games WHERE name = 'Minecraft'), (SELECT id FROM genres WHERE name = 'Adventure')),
-      ((SELECT id FROM games WHERE name = 'Monster Hunter'), (SELECT id FROM genres WHERE name = 'Action')),
-      ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM genres WHERE name = 'Action')), 
-      ((SELECT id FROM games WHERE name = 'Outer Wilds'), (SELECT id FROM genres WHERE name = 'Adventure')),
-      ((SELECT id FROM games WHERE name = 'Assassin''s Creed'), (SELECT id FROM genres WHERE name = 'RPG'))
-    ON CONFLICT (game_id, genre_id) DO NOTHING
-  `;
-  
-    const gameGenreResult = await client.query(insertGameGenreQuery);
-    console.log("Game-Genre data inserted:", gameGenreResult.rows);
-
-    const insertGameDeveloperQuery = `
-      INSERT INTO game_developer (game_id, developer_id)
+    const insertGamesQuery = `
+      INSERT INTO games (name, description, quantity, developer_id, genre_id)
       VALUES
-        ((SELECT id FROM games WHERE name = 'Minecraft'), (SELECT id FROM developers WHERE name = 'Naughty Dog')),
-        ((SELECT id FROM games WHERE name = 'Monster Hunter'), (SELECT id FROM developers WHERE name = 'Bethesda')),
-        ((SELECT id FROM games WHERE name = 'Assassins Creed'), (SELECT id FROM developers WHERE name = 'Ubisoft'))
+        ('Destiny 2', 'A multiplayer first-person shooter with RPG elements.', 40, (SELECT id FROM developers WHERE name = 'Bungie'), (SELECT id FROM genres WHERE name = 'Shooter')),
+        ('Halo: Combat Evolved', 'A first-person shooter and the start of the iconic Halo franchise.', 50, (SELECT id FROM developers WHERE name = 'Bungie'), (SELECT id FROM genres WHERE name = 'Shooter')),
+        ('The Legend of Zelda: Breath of the Wild', 'An open-world action-adventure game that redefines the Zelda franchise.', 45, (SELECT id FROM developers WHERE name = 'Nintendo'), (SELECT id FROM genres WHERE name = 'Adventure')),
+        ('Super Mario Odyssey', 'A 3D platformer game where Mario explores different worlds to save Princess Peach.', 55, (SELECT id FROM developers WHERE name = 'Nintendo'), (SELECT id FROM genres WHERE name = 'Action')),
+        ('The Witcher 3: Wild Hunt', 'An action RPG set in a dark fantasy world, following Geralt of Rivia on his journey.', 25, (SELECT id FROM developers WHERE name = 'CD Projekt Red'), (SELECT id FROM genres WHERE name = 'RPG')),
+        ('Cyberpunk 2077', 'An open-world RPG set in a futuristic dystopian world, full of choices and consequences.', 20, (SELECT id FROM developers WHERE name = 'CD Projekt Red'), (SELECT id FROM genres WHERE name = 'RPG')),
+        ('Half-Life: Alyx', 'A VR first-person shooter set in the Half-Life universe.', 30, (SELECT id FROM developers WHERE name = 'Valve'), (SELECT id FROM genres WHERE name = 'Shooter')),
+        ('Red Dead Redemption 2', 'An open-world western action-adventure game, known for its story and world-building.', 60, (SELECT id FROM developers WHERE name = 'Rockstar Games'), (SELECT id FROM genres WHERE name = 'Adventure')),
+        ('Grand Theft Auto V', 'A crime drama action-adventure game set in a fictional city, full of heists and exploration.', 65, (SELECT id FROM developers WHERE name = 'Rockstar Games'), (SELECT id FROM genres WHERE name = 'Action')),
+        ('Skyrim', 'A fantasy RPG set in a rich open world, where you become the Dragonborn.', 50, (SELECT id FROM developers WHERE name = 'Bethesda'), (SELECT id FROM genres WHERE name = 'RPG')),
+        ('Fallout 4', 'A post-apocalyptic RPG where you must survive in a world ravaged by nuclear war.', 30, (SELECT id FROM developers WHERE name = 'Bethesda'), (SELECT id FROM genres WHERE name = 'RPG')),
+        ('Assassin''s Creed: Odyssey', 'An open-world action RPG set in Ancient Greece, part of the Assassin''s Creed series.', 45, (SELECT id FROM developers WHERE name = 'Ubisoft'), (SELECT id FROM genres WHERE name = 'Adventure')),
+        ('Far Cry 5', 'An open-world first-person shooter set in a rural Montana town taken over by a doomsday cult.', 40, (SELECT id FROM developers WHERE name = 'Ubisoft'), (SELECT id FROM genres WHERE name = 'Shooter')),
+        ('FIFA 22', 'A football simulation video game that brings the excitement of the sport to life.', 60, (SELECT id FROM developers WHERE name = 'Electronic Arts'), (SELECT id FROM genres WHERE name = 'Action'))
+      ON CONFLICT (name) DO NOTHING;
     `;
-    const gameDeveloperResult = await client.query(insertGameDeveloperQuery);
-    console.log("Game-Developer data inserted:", gameDeveloperResult.rows);
+    await client.query(insertGamesQuery);
+    console.log("Games inserted.");
 
   } catch (err) {
     console.error("Error during database seeding:", err.stack);
