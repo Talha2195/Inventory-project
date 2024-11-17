@@ -4,4 +4,6 @@ const inventoryRouter = Router();
 
 inventoryRouter.get('/', invenController.inventoryItemsGet);
 
+inventoryRouter.get('/search', invenController.validateSearchTerm, invenController.namesSearchGet);
+
 module.exports = inventoryRouter;

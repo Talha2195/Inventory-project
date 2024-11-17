@@ -12,11 +12,21 @@
         Games Library
     </header>
 
+    <% if (errors && errors.length > 0) { %>
+        <div class="error-messages">
+            <% errors.forEach(function(error) { %>
+                <p><%= error.msg %></p>
+            <% }) %>
+        </div>
+    <% } %>
+
     <div class="main-container">
         <h2>Manage Your Games</h2>
-        <form action="/search" method="GET">
+
+        <form action="/search" method="get">
             <div class="search-container">
-                <input class="search-bar" type="text" placeholder="Search games...">
+                <input class="search-bar" name="searchTerm" type="text" placeholder="Search games..." value="<%= searchTerm %>">
+                <button type="submit">Search</button> 
             </div>
         </form>
 

@@ -19,12 +19,42 @@ async function getAllItems() {
         LEFT JOIN genres ON games.genre_id = genres.id  -- Directly join genres via genre_id
         ORDER BY games.name;
     `;
-
     const { rows } = await pool.query(query);
     return rows;
 }
 
 
+async function searchForItem(name) {
+    const query = `
+        SELECT 
+            games.id, 
+            games.name AS name,  -- Ensure consistent naming
+            games.description, 
+            developers.name AS developer_name,
+            genres.name AS genre_name  -- Include genre_name if needed
+        FROM games
+        LEFT JOIN developers ON games.developer_id = developers.id
+        LEFT JOIN genres ON games.genre_id = genres.id
+        WHERE 
+            games.name ILIKE $1 OR
+            developers.name ILIKE $1
+        ORDER BY games.name;
+    `;
+    
+    try {
+        const { rows } = await pool.query(query, [`%${name}%`]);  
+        return rows;
+    } catch (err) {
+        console.error("Error executing search query", err.stack);
+        throw err;
+    }
+}
+
+
+
+
+
 module.exports = {
     getAllItems,
+    searchForItem,
 };
