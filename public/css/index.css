@@ -26,6 +26,11 @@ header {
     border: 1px solid black;
 }
 
+.homePage {
+    text-decoration: none;   
+    color: inherit; 
+}
+
 .main-container {
     width: 80%; 
     height: 100%;
@@ -52,7 +57,7 @@ header {
     padding: 10px 10px 10px 35px; 
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 200px;
+    width: 350px;
     font-size: 1rem;
     background-image: url('../images/searchIcon.png'); 
     background-repeat: no-repeat;
@@ -96,14 +101,6 @@ input, select, textarea {
     width: 100%;
 }
 
-.main-container::after {
-    content: "";
-    display: block;
-    margin-top: 30px;
-    border-top: 2px solid #ccc;
-    padding-top: 20px;
-}
-
 table {
     width: 100%;
     border-collapse: separate;  
@@ -139,6 +136,86 @@ table tr:hover {
     height: 20px;
     width: 20px;
 }
+
+.button-link {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none; 
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block; 
+    width: 500px;
+}
+
+.button-link:hover {
+    background-color: #2980b9;
+}
+
+
+.dots-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;  
+    gap: 3px;      
+    align-items: center;
+    justify-content: center;
+    padding: 0;    
+    transition: all 0.3s ease; 
+}
+
+.dot {
+    display: inline-block;
+    width: 5px;  
+    height: 5px;
+    background-color: grey; 
+    border-radius: 50%;  
+    transition: background-color 0.3s ease; 
+}
+
+
+.dots-button:hover .dot {
+    background-color: black;  
+}
+
+.dots-button:hover{
+    background-color: white;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    min-width: 120px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+
 
 @media screen and (max-width: 768px) {
     .main-container {

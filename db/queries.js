@@ -50,11 +50,65 @@ async function searchForItem(name) {
     }
 }
 
+async function addGame(name, description, developerName, genreName) {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const developerQuery = `
+            SELECT id FROM developers WHERE name = $1;
+        `;
+        const developerRes = await client.query(developerQuery, [developerName]);
+        let developerId;
+        if (developerRes.rows.length > 0) {
+            developerId = developerRes.rows[0].id;
+        } else {
+            const insertDeveloperQuery = `
+                INSERT INTO developers (name) 
+                VALUES ($1) 
+                RETURNING id;
+            `;
+            const insertDeveloperRes = await client.query(insertDeveloperQuery, [developerName]);
+            developerId = insertDeveloperRes.rows[0].id;
+        }
+        const genreQuery = `
+            SELECT id FROM genres WHERE name = $1;
+        `;
+        const genreRes = await client.query(genreQuery, [genreName]);
+        let genreId;
+        if (genreRes.rows.length > 0) {
+            genreId = genreRes.rows[0].id;
+        } else {
+            const insertGenreQuery = `
+                INSERT INTO genres (name) 
+                VALUES ($1) 
+                RETURNING id;
+            `;
+            const insertGenreRes = await client.query(insertGenreQuery, [genreName]);
+            genreId = insertGenreRes.rows[0].id;
+        }
+        const insertGameQuery = `
+            INSERT INTO games (name, description, developer_id, genre_id) 
+            VALUES ($1, $2, $3, $4) 
+            RETURNING id;
+        `;
+        const insertGameRes = await client.query(insertGameQuery, [name, description, developerId, genreId]);
+        const newGameId = insertGameRes.rows[0].id;
+        await client.query('COMMIT');
 
+        return { success: true, gameId: newGameId };
+    } catch (err) {
 
+        console.error("Error in addGame:", err.stack);  
+        await client.query('ROLLBACK');  
+        throw new Error(`Database error: ${err.message}`);  
+    } finally {
+        client.release();
+    }
+}
 
 
 module.exports = {
     getAllItems,
     searchForItem,
+    addGame,
 };
