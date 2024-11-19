@@ -106,9 +106,45 @@ async function addGame(name, description, developerName, genreName) {
     }
 }
 
+async function deleteGame(gameId) {
+    const client = await pool.connect();
+    try {
+        const query = 'DELETE FROM games WHERE id = $1';
+        const result = await client.query(query, [gameId]);
+        if (result.rowCount > 0) {
+            return { success: true };
+        } else {
+            return { success: false, message: 'Game not found or already deleted' };
+        }
+    } catch (err) {
+        console.error("Error deleting game:", err.stack);
+        throw err;
+    } finally {
+        client.release();
+    }
+}
+
+async function updateGame(id, name, description, developerId, genreId) {
+    const query = `
+        UPDATE games
+        SET name = $1, description = $2, developer_id = $3, genre_id = $4
+        WHERE id = $5;
+    `;
+    
+    try {
+        const { rowCount } = await pool.query(query, [name, description, developerId, genreId, id]);
+        return rowCount > 0; 
+    } catch (err) {
+        console.error("Error updating game:", err.stack);
+        throw err;
+    }
+}
+
+
 
 module.exports = {
     getAllItems,
     searchForItem,
     addGame,
+    deleteGame,
 };

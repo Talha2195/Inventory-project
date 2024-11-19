@@ -13,6 +13,15 @@
             Games Library
         </a>
     </header>
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Are you sure you want to delete this game?</h2>
+            <div class="modal-buttons">
+                <button id="cancelBtn">Cancel</button>
+                <a id="confirmDeleteBtn" href="#" class="btn">Delete</a>
+            </div>
+        </div>
+    </div>
 
     <% if (errors && errors.length > 0) { %>
         <div class="error-messages">
@@ -35,6 +44,7 @@
             <a href="/addGame" class="button-link">Add Product</a>
             <button>Filter</button>
         </div>
+
         <table>
             <tr>
                 <th>Name</th>
@@ -49,22 +59,24 @@
                     <td><%= item.description %></td>
                     <td><%= item.developer_name || 'N/A' %></td>
                     <td><%= item.genre_name || 'N/A' %></td>
-                    <td>                    <div class="dropdown">
-                        <button class="dots-button">
-                            <i class="fas fa-circle dot"></i>
-                            <i class="fas fa-circle dot"></i>
-                            <i class="fas fa-circle dot"></i>
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="/editGame/<%= item.id %>">Edit</a>
-                            <a href="/deleteGame/<%= item.id %>" onclick="return confirm('Are you sure you want to delete this game?')">Delete</a>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dots-button">
+                                <i class="fas fa-circle dot"></i>
+                                <i class="fas fa-circle dot"></i>
+                                <i class="fas fa-circle dot"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <a href="/editGame/<%= item.id %>">Edit</a>
+                                <a href="#" class="deleteLink" data-id="<%= item.id %>">Delete</a>
+                            </div>
                         </div>
-                    </div></td>
+                    </td>
                 </tr>
             <% }) %>
         </table>
     </div>
+    <script src="js/modal.js"></script>
 </body>
 </html>
-
 

@@ -69,10 +69,25 @@ async function addNewGame(req, res) {
 }
 }
 
+async function deleteGame(req, res) {
+   const { id } = req.params;
+   try{
+    const result = await db.deleteGame(id);
+    if (result.success) {
+        res.redirect('/');  
+    } else {
+        res.status(404).send(result.message); 
+    }
+} catch (err) {
+    res.status(500).send('Error deleting game');
+}
+}
+
 module.exports = {
     inventoryItemsGet,
     namesSearchGet,
     addNewGame,
     displayAddPage,
+    deleteGame,
 };
 

@@ -76,7 +76,7 @@ header {
     gap: 20px;
 }
 
-button {
+button{
     background-color: #3498db;
     color: white;
     padding: 10px 15px;
@@ -141,6 +141,7 @@ table tr:hover {
     background-color: #3498db;
     color: white;
     padding: 10px 15px;
+    text-align: center;
     text-decoration: none; 
     border: none;
     border-radius: 5px;
@@ -186,7 +187,7 @@ table tr:hover {
     background-color: white;
 }
 
-.dropdown-content {
+.dropdown-content, .deleteBtn {
     display: none;
     position: absolute;
     right: 0;
@@ -213,6 +214,60 @@ table tr:hover {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+.modal {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000; 
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    width: 300px;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+}
+
+.modal-buttons button,
+.modal-buttons .btn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 5px;
+}
+
+.modal-buttons button:hover,
+.modal-buttons .btn:hover {
+    background-color: #2980b9;
+}
+
+#confirmDeleteBtn {
+    text-decoration: none;
+    color: inherit; 
+    color: white;
+}
+
+#confirmDeleteBtn:hover {
+    /* color: black;  */
+}
+
 
 
 
