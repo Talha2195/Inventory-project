@@ -124,6 +124,26 @@ async function deleteGame(gameId) {
     }
 }
 
+async function getGameById(id) {
+    const query = `
+        SELECT games.id, games.name, games.description, 
+               developers.name AS developer_name, genres.name AS genre_name, 
+               games.developer_id, games.genre_id
+        FROM games
+        LEFT JOIN developers ON games.developer_id = developers.id
+        LEFT JOIN genres ON games.genre_id = genres.id
+        WHERE games.id = $1;
+    `;
+    
+    try {
+        const { rows } = await pool.query(query, [id]);
+        return rows[0];  
+    } catch (err) {
+        console.error("Error fetching game by ID:", err.stack);
+        throw err;
+    }
+}
+
 async function updateGame(id, name, description, developerId, genreId) {
     const query = `
         UPDATE games
@@ -147,4 +167,6 @@ module.exports = {
     searchForItem,
     addGame,
     deleteGame,
+    updateGame,
+    getGameById,
 };

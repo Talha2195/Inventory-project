@@ -42,7 +42,23 @@
 
         <div class="button-container">
             <a href="/addGame" class="button-link">Add Product</a>
-            <button>Filter</button>
+            <div class="dropdown">
+                <button class="dropdown-button">Filter</button>
+                <div class="dropdown-content">
+                    <label>
+                        <input type="checkbox" name="filterOption1" id="filterOption1">
+                        Option 1
+                    </label>
+                    <label>
+                        <input type="checkbox" name="filterOption2" id="filterOption2">
+                        Option 2
+                    </label>
+                    <label>
+                        <input type="checkbox" name="filterOption3" id="filterOption3">
+                        Option 3
+                    </label>
+                </div>
+            </div>
         </div>
 
         <table>
@@ -67,7 +83,7 @@
                                 <i class="fas fa-circle dot"></i>
                             </button>
                             <div class="dropdown-content">
-                                <a href="/editGame/<%= item.id %>">Edit</a>
+                                <a href="/updateGame/<%= item.id %>">Edit</a>
                                 <a href="#" class="deleteLink" data-id="<%= item.id %>">Delete</a>
                             </div>
                         </div>

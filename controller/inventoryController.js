@@ -83,11 +83,44 @@ async function deleteGame(req, res) {
 }
 }
 
+async function displayEdits(req, res) {
+    const { id } = req.params;
+    try{
+        const game = await db.getGameById(id);
+        if (!game) {
+            return res.status(404).send("Game not found");
+        }
+        res.render('updateGame', { game });
+    } catch (err) {
+        console.error("Error fetching game data for editing:", err.stack);
+        res.status(500).send("Error fetching game data.");
+    }
+}
+
+async function updateGame(req, res) {
+    const { id } = req.params;
+    const { name, description, developerId, genreId } = req.body;
+    try{
+        const success = await db.updateGame(id, name, description, developerId, genreId);
+        if (success) {
+            res.redirect('/');  
+        } else {
+            res.status(404).send("Game not found or no changes made.");
+        }
+    } catch (err) {
+        console.error("Error updating game:", err.stack);
+        res.status(500).send("Error updating game.");
+    }
+
+}
+
 module.exports = {
     inventoryItemsGet,
     namesSearchGet,
     addNewGame,
     displayAddPage,
     deleteGame,
+    displayEdits,
+    updateGame,
 };
 
