@@ -16,22 +16,21 @@ async function getAllItems() {
             genres.name AS genre_name
         FROM games
         LEFT JOIN developers ON games.developer_id = developers.id
-        LEFT JOIN genres ON games.genre_id = genres.id  -- Directly join genres via genre_id
+        LEFT JOIN genres ON games.genre_id = genres.id  
         ORDER BY games.name;
     `;
     const { rows } = await pool.query(query);
     return rows;
 }
 
-
 async function searchForItem(name) {
     const query = `
         SELECT 
             games.id, 
-            games.name AS name,  -- Ensure consistent naming
+            games.name AS name, 
             games.description, 
             developers.name AS developer_name,
-            genres.name AS genre_name  -- Include genre_name if needed
+            genres.name AS genre_name
         FROM games
         LEFT JOIN developers ON games.developer_id = developers.id
         LEFT JOIN genres ON games.genre_id = genres.id
@@ -160,6 +159,58 @@ async function updateGame(id, name, description, developerId, genreId) {
     }
 }
 
+async function getGenresAndDevelopers() {
+    const query = `
+        SELECT 'genre' AS type, name AS name FROM genres 
+        UNION
+        SELECT 'developer' AS type, name AS name FROM developers;  
+    `;
+    
+    try {
+        const result = await pool.query(query);
+        const filters = result.rows.map(row => {
+            if (row.type === 'genre') {
+                return { genre: row.name };
+            } else if (row.type === 'developer') {
+                return { developer: row.name };
+            }
+        });
+
+        return filters; 
+    } catch (err) {
+        console.error("Error fetching genres and developers:", err.stack);
+        throw err;
+    }
+}
+
+async function getGamesByGenres(selectedGenres) {
+    const genrePlaceholders = selectedGenres.map((_, index) => `$${index + 1}`).join(', '); 
+    const query = `
+        SELECT 
+            games.id, 
+            games.name, 
+            games.description, 
+            developers.name AS developer_name,
+            genres.name AS genre_name
+        FROM games
+        LEFT JOIN developers ON games.developer_id = developers.id
+        LEFT JOIN genres ON games.genre_id = genres.id
+        WHERE genres.name IN (${genrePlaceholders})
+        ORDER BY games.name;
+    `;
+    
+    try {
+        const { rows } = await pool.query(query, selectedGenres);
+        return rows;
+    } catch (err) {
+        console.error("Error fetching games by selected genres:", err.stack);
+        throw err;
+    }
+}
+
+
+
+
 
 
 module.exports = {
@@ -169,4 +220,6 @@ module.exports = {
     deleteGame,
     updateGame,
     getGameById,
+    getGenresAndDevelopers,
+    getGamesByGenres,
 };

@@ -3,9 +3,11 @@ const { validationResult } = require("express-validator");
 
 async function inventoryItemsGet(req, res) {
     try {
+        const checks = await db.getGenresAndDevelopers()
         const listOfItems = await db.getAllItems();
         res.render('index', { 
             items: listOfItems,
+            filters: checks,
             errors: [], 
             searchTerm: '' 
         });
@@ -114,6 +116,26 @@ async function updateGame(req, res) {
 
 }
 
+async function filterGame (req, res) {
+    const selectedGenres = Object.keys(req.query).map(key => key.replace('genre_', ''));
+    if (selectedGenres.length === 0) {
+        return res.send('No genres selected');
+    }
+
+    try {
+        const filteredGames = await db.getGamesByGenres(selectedGenres);
+        const checks = await db.getGenresAndDevelopers()
+        res.render('filteredResult', { items: filteredGames,
+            filters: checks,
+            errors: [],
+            searchTerm: ''
+        });
+    } catch (error) {
+        console.error("Error fetching games:", error);
+        res.status(500).send('Server Error');
+    }
+}
+
 module.exports = {
     inventoryItemsGet,
     namesSearchGet,
@@ -122,5 +144,6 @@ module.exports = {
     deleteGame,
     displayEdits,
     updateGame,
+    filterGame,
 };
 

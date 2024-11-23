@@ -5,9 +5,9 @@
 }
 
 body {
-    font-family: Arial, sans-serif; 
-    background-color: #f4f4f4; 
-    color: #333; 
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,33 +15,27 @@ body {
 }
 
 header {
-    background-color: #4169E1; 
-    color: white; 
+    background-color: #4169E1;
+    color: white;
     padding: 20px;
     width: 100%;
     text-align: center;
     font-size: 2rem;
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
     border-bottom: 2px solid #ccc;
     border: 1px solid black;
 }
 
 .homePage {
-    text-decoration: none;   
-    color: inherit; 
+    text-decoration: none;
+    color: inherit;
 }
 
 .main-container {
-    width: 80%; 
-    height: 100%;
-    min-height: 80vh;
-    min-width: 400px;
     background-color: #fff;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    margin-top: 30px;
-    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid #ddd;
 }
 
@@ -51,32 +45,38 @@ header {
 }
 
 .search-bar {
-    position: absolute;
     top: 20px;
     right: 20px;
-    padding: 10px 10px 10px 35px; 
+    padding: 10px 10px 10px 35px;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 350px;
     font-size: 1rem;
-    background-image: url('../images/searchIcon.png'); 
+    background-image: url('../images/searchIcon.png');
     background-repeat: no-repeat;
-    background-position: 10px center; 
+    background-position: 10px center;
     background-size: 20px 20px;
 }
 
 .search-bar::placeholder {
-    padding-left: px; 
+    padding-left: 10px;
 }
+
 
 .button-container {
     display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
+    align-items: center;
     gap: 20px;
+    margin-top: 30px;
+    width: 100%;
 }
 
-button{
+.button-container .button-link,
+.button-container .dropdown {
+    flex: 1 1 20%;
+}
+
+button {
     background-color: #3498db;
     color: white;
     padding: 10px 15px;
@@ -85,11 +85,12 @@ button{
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: 48%; 
+    width: 100%;
+    max-width: 250px;
 }
 
 button:hover {
-    background-color: #2980b9; 
+    background-color: #2980b9;
 }
 
 input, select, textarea {
@@ -103,87 +104,86 @@ input, select, textarea {
 
 table {
     width: 100%;
-    border-collapse: separate;  
-    border-spacing: 0 10px; 
+    border-collapse: separate;
+    border-spacing: 0 10px;
 }
 
 th, td {
-    padding: 10px 15px; 
+    padding: 10px 15px;
     text-align: left;
     vertical-align: middle;
 }
 
 table th {
-    background-color: #4169E1; 
+    background-color: #4169E1;
     color: white;
 }
 
 table td {
     background-color: #fff;
-    border-bottom: 1.5px solid #ddd;  
+    border-bottom: 1.5px solid #ddd;
 }
 
 table tr {
     background-color: #fff;
-    border-bottom: 1px solid #ddd; 
+    border-bottom: 1px solid #ddd;
 }
 
 table tr:hover {
-    background-color: #f1f1f1;  
+    background-color: #f1f1f1;
 }
 
-.search-icon{
-    height: 20px;
-    width: 20px;
-}
-
-.button-link {
+.button-link, .dropdown-button {
     background-color: #3498db;
     color: white;
     padding: 10px 15px;
     text-align: center;
-    text-decoration: none; 
+    text-decoration: none;
     border: none;
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    display: inline-block; 
-    width: 500px;
+    display: inline-block;
+    width: 100%;
+    max-width: 250px;
+    margin-bottom: 15px;
+}
+
+.button-link {
+    margin-left: 480px;
 }
 
 .button-link:hover {
     background-color: #2980b9;
 }
 
-
 .dots-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    display: flex;  
-    gap: 3px;      
+    display: flex;
+    gap: 3px;
     align-items: center;
     justify-content: center;
-    padding: 0;    
-    transition: all 0.3s ease; 
+    padding: 0;
+    transition: all 0.3s ease;
 }
 
 .dot {
     display: inline-block;
-    width: 5px;  
+    width: 5px;
     height: 5px;
-    background-color: grey; 
-    border-radius: 50%;  
-    transition: background-color 0.3s ease; 
+    background-color: grey;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
 }
-
 
 .dots-button:hover .dot {
-    background-color: black;  
+    background-color: black;
 }
 
-.dots-button:hover{
+.dots-button:hover {
     background-color: white;
 }
 
@@ -194,9 +194,13 @@ table tr:hover {
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    min-width: 120px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    width: 10px;
+}
+
+.dropdown-content {
+    width: 10px;
 }
 
 .dropdown-content a {
@@ -216,14 +220,14 @@ table tr:hover {
 }
 
 .modal {
-    display: none; 
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000; 
+    z-index: 1000;
     align-items: center;
     justify-content: center;
     padding: 20px;
@@ -260,36 +264,74 @@ table tr:hover {
 
 #confirmDeleteBtn {
     text-decoration: none;
-    color: inherit; 
+    color: inherit;
     color: white;
 }
 
-#confirmDeleteBtn:hover {
-    /* color: black;  */
+.dropdown-filter {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    min-width: 240px;
+    padding: 8px;
 }
 
+.filter-section {
+    display: flex;
+    flex-direction: column;  
+    margin-bottom: 15px;     
+}
 
+.filter-section h4 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: -5px;    
+    color: #333;
+}
 
+.filter-section label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; 
+    font-size: 14px;     
+    width: 100%;          
+    justify-content: flex-start; 
+}
 
+.filter-section input[type="checkbox"] {
+    margin-right: 10px;   
+    width: 16px;         
+    height: 16px;        
+    flex-shrink: 0;      
+    vertical-align: middle;
+}
 
+.dropdown.active .dropdown-filter {
+    display: block;
+}
+
+.filter-section label {
+    padding-left: 5px; 
+}
 
 @media screen and (max-width: 768px) {
     .main-container {
-        height: 100%;
-        width: 90%; 
+        width: 100%;
     }
     .search-bar {
         width: 100%; 
-        position: static;
-        margin-top: 20px;
     }
     .button-container {
-        flex-direction: column;
+        flex-direction: column; 
     }
-    .button-container button {
+    .button-container .button-link,
+    .button-container .dropdown {
         width: 100%;
-        margin-bottom: 10px;
     }
 }
-
 
