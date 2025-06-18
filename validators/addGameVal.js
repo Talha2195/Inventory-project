@@ -23,5 +23,5 @@ const validateAddGame = [
 ];
 
 module.exports = {
-    validateAddGame
+    validateAddGame,
 };
