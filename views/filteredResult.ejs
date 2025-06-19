@@ -1,95 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Games Library</title>
-    <link rel="stylesheet" href="css/index.css">
-</head>
-<body>
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  </head>
+  <body>
     <header>
-        <a class="homePage" href="/">
-            Games Library
-        </a>
+      <a class="homePage" href="/"> Games Library </a>
     </header>
     <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <h2>Are you sure you want to delete this game?</h2>
-            <div class="modal-buttons">
-                <button id="cancelBtn">Cancel</button>
-                <a id="confirmDeleteBtn" href="#" class="btn">Delete</a>
-            </div>
+      <div class="modal-content">
+        <h2>Are you sure you want to delete this game?</h2>
+        <div class="modal-buttons">
+          <button id="cancelBtn">Cancel</button>
+          <a id="confirmDeleteBtn" href="#" class="btn">Delete</a>
         </div>
+      </div>
     </div>
 
     <% if (errors && errors.length > 0) { %>
-        <div class="error-messages">
-            <% errors.forEach(function(error) { %>
-                <p><%= error.msg %></p>
-            <% }) %>
-        </div>
+    <div class="error-messages">
+      <% errors.forEach(function(error) { %>
+      <p><%= error.msg %></p>
+      <% }) %>
+    </div>
     <% } %>
 
     <div class="main-container">
-        <div class="button-container">
-            <form action="/search" method="get" class="search-form">
-                <input class="search-bar" name="searchTerm" type="text" placeholder="Search games..." value="<%= searchTerm %>">
+      <div class="button-container">
+        <form action="/search" method="get" class="search-form">
+          <input
+            class="search-bar"
+            name="searchTerm"
+            type="text"
+            placeholder="Search games..."
+            value="<%= searchTerm %>"
+          />
+        </form>
+        <a href="/addGame" class="button-link">Add Product</a>
+        <div class="dropdown">
+          <button class="dropdown-button" id="filterBtn">Filter</button>
+          <div class="dropdown-filter">
+            <form action="/filter" method="get">
+              <div class="filter-section">
+                <h4>Genres</h4>
+                <% filters.forEach(filter => { %> <% if (filter.genre) { %>
+                <label>
+                  <input type="checkbox" name="genre_<%= filter.genre %>" />
+                  <%= filter.genre %>
+                </label>
+                <% } %> <% }) %>
+              </div>
+              <button type="submit">Apply</button>
             </form>
-            <a href="/addGame" class="button-link">Add Product</a>
-            <div class="dropdown">
-                <button class="dropdown-button" id="filterBtn">Filter</button>
-                <div class="dropdown-filter">
-                    <form action="/filter" method="get">
-                        <div class="filter-section">
-                            <h4>Genres</h4>
-                            <% filters.forEach(filter => { %>
-                                <% if (filter.genre) { %>
-                                    <label>
-                                        <input type="checkbox" name="genre_<%= filter.genre %>">
-                                        <%= filter.genre %>
-                                    </label>
-                                <% } %>
-                            <% }) %>
-                        </div>
-                        <button type="submit">Apply</button>
-                    </form>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
 
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Developer</th>
-                <th>Genre</th>
-                <th>Actions</th>
-            </tr>
-            <% items.forEach(item => { %>
-                <tr>
-                    <td><%= item.name %></td>
-                    <td><%= item.description %></td>
-                    <td><%= item.developer_name || 'N/A' %></td>
-                    <td><%= item.genre_name || 'N/A' %></td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="dots-button">
-                                <i class="fas fa-circle dot"></i>
-                                <i class="fas fa-circle dot"></i>
-                                <i class="fas fa-circle dot"></i>
-                            </button>
-                            <div class="dropdown-content">
-                                <a href="/updateGame/<%= item.id %>">Edit</a>
-                                <a href="#" class="deleteLink" data-id="<%= item.id %>">Delete</a>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            <% }) %>
-        </table>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Developer</th>
+          <th>Genre</th>
+          <th>Actions</th>
+        </tr>
+        <% items.forEach(item => { %>
+        <tr>
+          <td><%= item.name %></td>
+          <td><%= item.description %></td>
+          <td><%= item.developer_name || 'N/A' %></td>
+          <td><%= item.genre_name || 'N/A' %></td>
+          <td>
+            <div class="dropdown">
+              <button class="dots-button">
+                <i class="fas fa-circle dot"></i>
+                <i class="fas fa-circle dot"></i>
+                <i class="fas fa-circle dot"></i>
+              </button>
+              <div class="dropdown-content">
+                <a href="/updateGame/<%= item.id %>">Edit</a>
+                <a href="#" class="deleteLink" data-id="<%= item.id %>"
+                  >Delete</a
+                >
+              </div>
+            </div>
+          </td>
+        </tr>
+        <% }) %>
+      </table>
     </div>
     <script src="js/modal.js"></script>
     <script src="/js/filter.js"></script>
-</body>
+  </body>
 </html>
