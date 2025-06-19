@@ -8,4 +8,4 @@ Use Node App to start server
 
 Live here - https://inventory-project-qo7v.onrender.com
 
-![ScreenShot](/public/images/inventoryProjectScreenShot.png)
+![ScreenShot](/public/images/inventoryProjectScreenshot.png)
