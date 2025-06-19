@@ -1,4 +1,4 @@
-const db = require("../db/queries")
+const db = require("../database/queries")
 const { validationResult } = require("express-validator")
 
 async function inventoryItemsGet(req, res) {
